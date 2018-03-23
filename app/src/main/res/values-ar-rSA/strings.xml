@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تدريب 4</string>
+    <string name="type_a_message">اكتب رسالة</string>
+    <string name="online">متصل</string>
+    <string name="start_conversation">ابدأ المحادثة</string>
+    <string name="comma">،</string>
+    <string name="empty_message_toast">لا يمكن إرسال رسالة فارغة!</string>
+    <string name="capture_photo">التقط صورة</string>
+    <string name="capture_video">التقط فيديو</string>
+    <string name="pic_error">حصل خطأ أثناء انشاء الملف</string>
+    <string name="delivered">تم الإرسال</string>
+    <string name="read">تمت القراءة</string>
+    <string name="reply">الرد</string>
+    <string name="delete_convo">حذف الرسائل</string>
+</resources>

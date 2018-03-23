@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/delivered_button"
+        android:icon="@drawable/ic_done_white_24dp"
+        android:title="@string/delivered"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/read_button"
+        android:icon="@drawable/ic_done_all_white_24dp"
+        android:title="@string/read"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/reply_button"
+        android:icon="@drawable/ic_compare_arrows_white_24dp"
+        android:title="@string/reply"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/delete_button"
+        android:title="@string/delete_convo"
+        app:showAsAction="never" />
+
+</menu>
