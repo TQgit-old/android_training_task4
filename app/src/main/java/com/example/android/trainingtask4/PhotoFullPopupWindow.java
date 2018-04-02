@@ -35,12 +35,10 @@ public class PhotoFullPopupWindow extends PopupWindow {
     PhotoView photoView;
     ProgressBar loading;
     ViewGroup parent;
-    private static PhotoFullPopupWindow instance = null;
-
 
 
     public PhotoFullPopupWindow(Context context, int layout, View v, String imageUrl, Bitmap bitmap) {
-        super(((LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE)).inflate( R.layout.popup_photo_full, null), ViewGroup.LayoutParams.MATCH_PARENT,
+        super(((LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(R.layout.popup_photo_full, null), ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
         if (Build.VERSION.SDK_INT >= 21) {
@@ -48,7 +46,7 @@ public class PhotoFullPopupWindow extends PopupWindow {
         }
         this.mContext = context;
         this.view = getContentView();
-        ImageButton closeButton = (ImageButton) this.view.findViewById(R.id.ib_close);
+        ImageButton closeButton = this.view.findViewById(R.id.ib_close);
         setOutsideTouchable(true);
 
         setFocusable(true);
@@ -62,25 +60,20 @@ public class PhotoFullPopupWindow extends PopupWindow {
         });
         //---------Begin customising this popup--------------------
 
-        photoView = (PhotoView) view.findViewById(R.id.image);
-        loading = (ProgressBar) view.findViewById(R.id.loading);
+        photoView = view.findViewById(R.id.image);
+        loading = view.findViewById(R.id.loading);
         photoView.setMaximumScale(6);
         parent = (ViewGroup) photoView.getParent();
         // ImageUtils.setZoomable(imageView);
         //----------------------------
         if (bitmap != null) {
             loading.setVisibility(View.GONE);
-            if (Build.VERSION.SDK_INT >= 16) {
-                parent.setBackground(new BitmapDrawable(mContext.getResources(), Constants.fastblur(Bitmap.createScaledBitmap(bitmap, 50, 50, true))));// ));
-            } else {
-                onPalette(Palette.from(bitmap).generate());
-
-            }
+            parent.setBackground(new BitmapDrawable(mContext.getResources(), Constants.fastblur(Bitmap.createScaledBitmap(bitmap, 50, 50, true))));// ));
             photoView.setImageBitmap(bitmap);
         } else {
             loading.setIndeterminate(true);
             loading.setVisibility(View.VISIBLE);
-            GlideApp.with(context) .asBitmap()
+            GlideApp.with(context).asBitmap()
                     .load(imageUrl)
 
                     .error(R.drawable.no_image)
@@ -94,19 +87,13 @@ public class PhotoFullPopupWindow extends PopupWindow {
 
                         @Override
                         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                            if (Build.VERSION.SDK_INT >= 16) {
-                                parent.setBackground(new BitmapDrawable(mContext.getResources(), Constants.fastblur(Bitmap.createScaledBitmap(resource, 50, 50, true))));// ));
-                            } else {
-                                onPalette(Palette.from(resource).generate());
-
-                            }
+                            parent.setBackground(new BitmapDrawable(mContext.getResources(), Constants.fastblur(Bitmap.createScaledBitmap(resource, 50, 50, true))));// ));
                             photoView.setImageBitmap(resource);
 
                             loading.setVisibility(View.GONE);
                             return false;
                         }
                     })
-
 
 
                     .diskCacheStrategy(DiskCacheStrategy.ALL)

@@ -5,10 +5,10 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -38,6 +38,8 @@ import static com.example.android.trainingtask4.ChatMessage.MEDIA_VIDEO;
 
 public class ConversationActivity extends AppCompatActivity {
 
+    static final int REQUEST_TAKE_PHOTO = 1;
+    static final int REQUEST_VIDEO_CAPTURE = 2;
     ArrayList<ChatMessage> messages;
     ChatMessageAdapter adapter;
     EditText typedMessage;
@@ -51,9 +53,6 @@ public class ConversationActivity extends AppCompatActivity {
     AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
     SharedPreferences preferences;
     SharedPreferences.Editor prefsEditor;
-
-    static final int REQUEST_TAKE_PHOTO = 1;
-    static final int REQUEST_VIDEO_CAPTURE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,7 +273,7 @@ public class ConversationActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             mediaMessage = new ChatMessage(Calendar.getInstance(), true, MEDIA_PHOTO);
             // Create the File where the photo should go
-            File photoFile = null;
+            File photoFile;
             try {
                 photoFile = mediaMessage.createImageFile(this);
             } catch (IOException ex) {
@@ -299,7 +298,7 @@ public class ConversationActivity extends AppCompatActivity {
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
             mediaMessage = new ChatMessage(Calendar.getInstance(), true, MEDIA_VIDEO);
             // Create the File where the video should go
-            File videoFile = null;
+            File videoFile;
             try {
                 videoFile = mediaMessage.createVideoFile(this);
             } catch (IOException ex) {

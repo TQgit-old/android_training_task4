@@ -23,6 +23,12 @@ import java.util.Date;
 
 public class ChatMessage {
 
+    public static final int STATUS_SENDING = R.drawable.msg_status_gray_waiting;
+    public static final int STATUS_SENT = R.drawable.msg_status_client_received;
+    public static final int STATUS_READ = R.drawable.msg_status_client_read;
+    public static final int MEDIA_NONE = 0;
+    public static final int MEDIA_PHOTO = 1;
+    public static final int MEDIA_VIDEO = 2;
     private String mText;
     private Calendar mCalendar;
     private String mCurrentMediaPath;
@@ -30,14 +36,6 @@ public class ChatMessage {
     private boolean isSent;
     private int mStatus;
     private int mMediaType;
-
-    public static final int STATUS_SENDING = R.drawable.msg_status_gray_waiting;
-    public static final int STATUS_SENT = R.drawable.msg_status_client_received;
-    public static final int STATUS_READ = R.drawable.msg_status_client_read;
-
-    public static final int MEDIA_NONE = 0;
-    public static final int MEDIA_PHOTO = 1;
-    public static final int MEDIA_VIDEO = 2;
 
     private ChatMessage(Calendar calendar, boolean isSent) {
         mCalendar = calendar;
@@ -161,8 +159,8 @@ public class ChatMessage {
         }
         int width = thumbnail.getWidth();
         int height = thumbnail.getHeight();
-        float scaleWidth = ((float) context.getResources().getDimension(R.dimen.image_width)) / width;
-        float scaleHeight = ((float) context.getResources().getDimension(R.dimen.image_height)) / height;
+        float scaleWidth = (context.getResources().getDimension(R.dimen.image_width)) / width;
+        float scaleHeight = (context.getResources().getDimension(R.dimen.image_height)) / height;
         // CREATE A MATRIX FOR THE MANIPULATION
         Matrix matrix = new Matrix();
         // RESIZE THE BIT MAP
@@ -174,7 +172,7 @@ public class ChatMessage {
         thumbnail.recycle();
 
         String path = Environment.getExternalStorageDirectory().toString();
-        OutputStream fOut = null;
+        OutputStream fOut;
         File file = new File(mCurrentThumbnailPath);
 
         try {

@@ -1,21 +1,22 @@
 package com.example.android.trainingtask4;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Surface;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.VideoView;
 
-import java.io.File;
+import java.io.IOException;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
@@ -23,15 +24,15 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
  * Created by TQ on 22-Mar-18.
  */
 
-public class VideoFullPopupWindow extends PopupWindow {
+public class VideoFullPopupWindow extends PopupWindow implements TextureView.SurfaceTextureListener {
 
     View view;
     Context mContext;
-    VideoView videoView;
+    TextureView textureView;
+    MediaPlayer mp;
     View loadingBG;
     ProgressBar loadingVid;
     boolean videoLoaded;
-    private static VideoFullPopupWindow instance = null;
 
 
     public VideoFullPopupWindow(Context context, int layout, View v, String videoUrl) {
@@ -43,7 +44,7 @@ public class VideoFullPopupWindow extends PopupWindow {
         }
         this.mContext = context;
         this.view = getContentView();
-        ImageButton closeButton = (ImageButton) this.view.findViewById(R.id.vid_close);
+        ImageButton closeButton = this.view.findViewById(R.id.vid_close);
         setOutsideTouchable(true);
 
         setFocusable(true);
@@ -73,18 +74,33 @@ public class VideoFullPopupWindow extends PopupWindow {
         loadingVid.setVisibility(View.VISIBLE);
         loadingVid.setIndeterminate(true);
         loadingBG.setVisibility(View.VISIBLE);
-        videoView = this.view.findViewById(R.id.video);
+        textureView = this.view.findViewById(R.id.video);
+        textureView.setSurfaceTextureListener(this);
 
-        Uri videoURI = Uri.fromFile(new File(videoUrl));
-        videoView.setVideoURI(videoURI);
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        mp = new MediaPlayer();
+        try {
+            mp.setDataSource(videoUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        showAtLocation(v, Gravity.CENTER, 0, 0);
+    }
+
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
+        Surface surface = new Surface(surfaceTexture);
+
+        mp.setSurface(surface);
+        mp.prepareAsync();
+        mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
                 videoLoaded = true;
                 loadingVid.setVisibility(View.GONE);
                 loadingBG.setVisibility(View.GONE);
-                videoView.start();
-                videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mediaPlayer) {
                         dismiss();
@@ -92,7 +108,29 @@ public class VideoFullPopupWindow extends PopupWindow {
                 });
             }
         });
+    }
 
-        showAtLocation(v, Gravity.CENTER, 0, 0);
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
+
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+        return false;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+
+    }
+
+    @Override
+    public void dismiss() {
+        if (mp != null) {
+            mp.stop();
+            mp.release();
+        }
+        super.dismiss();
     }
 }
